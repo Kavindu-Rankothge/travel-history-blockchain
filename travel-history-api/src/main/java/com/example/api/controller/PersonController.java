@@ -12,34 +12,32 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.api.model.Person;
-import com.example.api.repository.PersonRepository;
+import com.example.api.service.PersonService;
 
 @RestController
 public class PersonController {
 	
 	@Autowired
-	private PersonRepository personRepository;
+	private PersonService personService;
 	
 	@PostMapping("/addPerson")
 	public String savePerson(@RequestBody Person person) {
-		personRepository.save(person);
-		return "Added person with id: " + person.getId();		
+		return personService.savePerson(person);				
 	}
 	
 	@GetMapping("/findAllPeople")
-	public List<Person> getPeople() {
-		return personRepository.findAll();
+	public List<Person> getAllPeople() {
+		return personService.getAllPeople();
 	}
 
 	@GetMapping("/findPerson/{id}")
 	public Optional<Person> getPerson(@PathVariable int id) {
-		return personRepository.findById(id);
+		return personService.getPerson(id);
 	}
 
 	@DeleteMapping("/delete/{id}")
 	public String deletePerson(@PathVariable int id) {
-		personRepository.deleteById(id);
-		return "Deleted person with id: " + id;
+		return personService.deletePerson(id);		
 	}
-
+	
 }
