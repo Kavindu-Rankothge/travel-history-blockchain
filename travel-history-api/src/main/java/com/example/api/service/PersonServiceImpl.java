@@ -22,7 +22,7 @@ public class PersonServiceImpl implements PersonService {
 	}
 
 	@Override
-	public Optional<Person> getPerson(int id) {
+	public Optional<Person> getPerson(String id) {
 		return personRepository.findById(id);
 	}
 
@@ -32,7 +32,7 @@ public class PersonServiceImpl implements PersonService {
 	}
 
 	@Override
-	public String deletePerson(int id) {
+	public String deletePerson(String id) {
 		personRepository.deleteById(id);
 		return "Deleted person with id: " + id;
 	}

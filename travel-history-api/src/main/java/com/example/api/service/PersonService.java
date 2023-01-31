@@ -8,8 +8,8 @@ import com.example.api.model.Person;
 public interface PersonService {
 
 	public abstract String savePerson(Person person);
-	public abstract Optional<Person> getPerson(int id);
+	public abstract Optional<Person> getPerson(String id);
 	public abstract List<Person> getAllPeople();
-	public abstract String deletePerson(int id);
+	public abstract String deletePerson(String id);
 
 }

@@ -31,12 +31,12 @@ public class PersonController {
 	}
 
 	@GetMapping("/findPerson/{id}")
-	public Optional<Person> getPerson(@PathVariable int id) {
+	public Optional<Person> getPerson(@PathVariable String id) {
 		return personService.getPerson(id);
 	}
 
 	@DeleteMapping("/delete/{id}")
-	public String deletePerson(@PathVariable int id) {
+	public String deletePerson(@PathVariable String id) {
 		return personService.deletePerson(id);		
 	}
 	
