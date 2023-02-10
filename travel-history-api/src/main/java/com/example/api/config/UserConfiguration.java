@@ -50,7 +50,8 @@ public class UserConfiguration {
 	public HFCAClient createCAClient() throws Exception {
 		// create a CA client for interacting with the CA
 		Properties props = new Properties();
-		props.put("pemFile", "ca.org1.example.com-cert.pem");
+		props.put("pemFile",
+				"../../test-network/organizations/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem");
 		props.put("allowAllHostNames", "true");
 		HFCAClient caClient;
 		caClient = HFCAClient.createNewInstance("https://localhost:7054", props);
