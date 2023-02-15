@@ -18,6 +18,7 @@ import org.hyperledger.fabric.sdk.security.CryptoSuiteFactory;
 import org.hyperledger.fabric_ca.sdk.EnrollmentRequest;
 import org.hyperledger.fabric_ca.sdk.HFCAClient;
 import org.hyperledger.fabric_ca.sdk.RegistrationRequest;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
@@ -28,10 +29,12 @@ public class UserConfiguration {
 	static {
 		System.setProperty("org.hyperledger.fabric.sdk.service_discovery.as_localhost", "true");
 	}
+	
+	@Value("${cert.pem.path}")
+	private String certPemPath;
 
 	@EventListener(ApplicationReadyEvent.class)
 	public void enrollAndRegister() {
-		System.out.println("Testing startup event!!!");
 		try {
 			HFCAClient caClient = createCAClient();
 			// Create a wallet for managing identities
@@ -50,8 +53,7 @@ public class UserConfiguration {
 	public HFCAClient createCAClient() throws Exception {
 		// create a CA client for interacting with the CA
 		Properties props = new Properties();
-		props.put("pemFile",
-				"../../test-network/organizations/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem");
+		props.put("pemFile", certPemPath);
 		props.put("allowAllHostNames", "true");
 		HFCAClient caClient;
 		caClient = HFCAClient.createNewInstance("https://localhost:7054", props);

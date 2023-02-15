@@ -14,6 +14,7 @@ import org.hyperledger.fabric.gateway.Gateway;
 import org.hyperledger.fabric.gateway.Network;
 import org.hyperledger.fabric.gateway.Wallet;
 import org.hyperledger.fabric.gateway.Wallets;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.example.api.model.Person;
@@ -22,8 +23,8 @@ import com.google.gson.Gson;
 @Service
 public class PersonServiceImpl implements PersonService {
 
-//	@Autowired
-//	private PersonRepository personRepository;
+	@Value("${network.yml.path}")
+	private String networkPath;
 
 	public Contract getContract() {
 		try {
@@ -31,7 +32,7 @@ public class PersonServiceImpl implements PersonService {
 			Path walletPath = Paths.get("wallet");
 			Wallet wallet = Wallets.newFileSystemWallet(walletPath);
 			// load a CCP
-			Path networkConfigPath = Paths.get("..", "..", "test-network", "organizations", "peerOrganizations", "org1.example.com", "connection-org1.yaml");
+			Path networkConfigPath = Paths.get(networkPath);
 			Gateway.Builder builder = Gateway.createBuilder();
 			builder.identity(wallet, "appUser").networkConfig(networkConfigPath).discovery(true);		
 			// create a gateway connection
