@@ -1,26 +1,29 @@
 package com.example.api.model;
 
+import java.util.Date;
 import java.util.List;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-@Document(collection = "Person")
 public class Person {
-	@Id
 	private String id;
+	private String passportNo;
 	private String name;
-	private int age;
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	private Date dob;
 	private String birthCountry;
 	private List<TravelDetails> travelHistory;
 
-	public Person(String id, String name, int age, String birthCountry, List<TravelDetails> travelHistory) {
-		super();
+	public Person(String id, String name, String passportNo, Date dob, String birthCountry) {
 		this.id = id;
 		this.name = name;
-		this.age = age;
+		this.passportNo = passportNo;
+		this.dob = dob;
 		this.birthCountry = birthCountry;
-		this.travelHistory = travelHistory;
+	}
+
+	public void setId() {
+		this.id = this.passportNo + this.birthCountry;
 	}
 
 	public String getId() {
@@ -31,6 +34,14 @@ public class Person {
 		this.id = id;
 	}
 
+	public String getPassportNo() {
+		return passportNo;
+	}
+
+	public void setPassportNo(String passportNo) {
+		this.passportNo = passportNo;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -39,12 +50,12 @@ public class Person {
 		this.name = name;
 	}
 
-	public int getAge() {
-		return age;
+	public Date getDob() {
+		return dob;
 	}
 
-	public void setAge(int age) {
-		this.age = age;
+	public void setDob(Date dob) {
+		this.dob = dob;
 	}
 
 	public String getBirthCountry() {
@@ -55,18 +66,10 @@ public class Person {
 		this.birthCountry = birthCountry;
 	}
 
-	public List<TravelDetails> getTravelHistory() {
-		return travelHistory;
-	}
-
-	public void setTravelHistory(List<TravelDetails> travelHistory) {
-		this.travelHistory = travelHistory;
-	}
-
 	@Override
 	public String toString() {
-		return "Person [id=" + id + ", name=" + name + ", age=" + age + ", birthCountry=" + birthCountry
-				+ ", travelHistory=" + travelHistory + "]";
-	}	
+		return "Person [id=" + id + ", passportNo=" + passportNo + ", name=" + name + ", dob=" + dob + ", birthCountry="
+				+ birthCountry + "]";
+	}
 
 }
