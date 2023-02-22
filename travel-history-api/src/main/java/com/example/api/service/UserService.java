@@ -11,5 +11,7 @@ public interface UserService {
 	public abstract Optional<User> getUser(String name);
 	public abstract List<User> getAllUsers();
 	public abstract String deleteUser(String name);
+	public abstract String enrollAdminUser(String name);
+	public abstract String registerNewUser(String adminName, String userName);
 
 }

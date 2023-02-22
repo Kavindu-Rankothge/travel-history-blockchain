@@ -10,15 +10,17 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class User {
 	@Id
 	private String name;
+	private String password;
 	private Set<String> roles;
 	private String account;
 	private String affiliation;
 	private Enrollment enrollment;
 	private String mspId;
 
-	public User(String name, Set<String> roles, String account, String affiliation, Enrollment enrollment,
-			String mspId) {
+	public User(String name, String password, Set<String> roles, String account, String affiliation,
+			Enrollment enrollment, String mspId) {
 		this.name = name;
+		this.password = password;
 		this.roles = roles;
 		this.account = account;
 		this.affiliation = affiliation;
@@ -32,6 +34,14 @@ public class User {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public Set<String> getRoles() {
@@ -76,8 +86,8 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [name=" + name + ", roles=" + roles + ", account=" + account + ", affiliation=" + affiliation
-				+ ", enrollment=" + enrollment + ", mspId=" + mspId + "]";
+		return "User [name=" + name + ", password=" + password + ", roles=" + roles + ", account=" + account
+				+ ", affiliation=" + affiliation + ", enrollment=" + enrollment + ", mspId=" + mspId + "]";
 	}
 
 }
