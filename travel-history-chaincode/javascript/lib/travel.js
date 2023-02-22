@@ -4,17 +4,11 @@ const { Contract } = require('fabric-contract-api');
 
 class TravelHistory extends Contract {
 
-    async initLedger(ctx) {
-        console.info('============= START : Initialize Ledger ===========');
-        console.info('============= END : Initialize Ledger ===========');
-    }
-
     async savePerson(ctx, id, personJSONString) {
         console.info('============= START : Save Person ===========');
         const person = JSON.parse(personJSONString);
         person.docType = 'person';
         id = person.id
-        delete person.id
         await ctx.stub.putState(id, Buffer.from(JSON.stringify(person)));
         console.info('============= END : Save Person ===========');
     }
@@ -34,14 +28,14 @@ class TravelHistory extends Contract {
         const allResults = [];
         for await (const {key, value} of ctx.stub.getStateByRange(startKey, endKey)) {
             const strValue = Buffer.from(value).toString('utf8');
-            let record;
+            let peronRecord;
             try {
-                record = JSON.parse(strValue);
+                peronRecord = JSON.parse(strValue);
             } catch (err) {
                 console.log(err);
-                record = strValue;
+                peronRecord = strValue;
             }
-            allResults.push({ Key: key, Record: record });
+            allResults.push(peronRecord);
         }
         console.info(allResults);
         return JSON.stringify(allResults);
@@ -53,7 +47,7 @@ class TravelHistory extends Contract {
         if (!personAsBytes || personAsBytes.length === 0) {
             throw new Error(`${id} does not exist`);
         }
-        await ctx.stub.delState(id);
+        await ctx.stub.deleteState(id);
         console.info('============= END : Delete Person ===========');
     }
 
