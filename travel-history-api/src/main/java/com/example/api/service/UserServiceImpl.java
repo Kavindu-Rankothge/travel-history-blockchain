@@ -44,6 +44,12 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public String updateUser(User user) {
+		userRepository.insert(user);
+		return "Update user with name: " + user.getName();
+	}
+
+	@Override
 	public String deleteUser(String name) {
 		userRepository.deleteById(name);
 		return "Deleted user with name: " + name;
