@@ -14,12 +14,15 @@ public class Person {
 	private String birthCountry;
 	private List<TravelDetails> travelHistory;
 
-	public Person(String id, String name, String passportNo, Date dob, String birthCountry) {
+	public Person(String id, String passportNo, String name, Date dob, String birthCountry,
+			List<TravelDetails> travelHistory) {
+		super();
 		this.id = id;
-		this.name = name;
 		this.passportNo = passportNo;
+		this.name = name;
 		this.dob = dob;
 		this.birthCountry = birthCountry;
+		this.travelHistory = travelHistory;
 	}
 
 	public void setId() {
@@ -66,10 +69,18 @@ public class Person {
 		this.birthCountry = birthCountry;
 	}
 
+	public List<TravelDetails> getTravelHistory() {
+		return travelHistory;
+	}
+
+	public void setTravelHistory(List<TravelDetails> travelHistory) {
+		this.travelHistory = travelHistory;
+	}
+
 	@Override
 	public String toString() {
 		return "Person [id=" + id + ", passportNo=" + passportNo + ", name=" + name + ", dob=" + dob + ", birthCountry="
-				+ birthCountry + "]";
+				+ birthCountry + ", travelHistory=" + travelHistory + "]";
 	}
 
 }
