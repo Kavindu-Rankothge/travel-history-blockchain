@@ -15,7 +15,7 @@ import com.example.api.model.User;
 import com.example.api.service.UserService;
 
 @RestController
-public class UserConroller {
+public class UserController {
 
 	@Autowired
 	private UserService userService;
