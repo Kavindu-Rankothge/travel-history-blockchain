@@ -45,8 +45,12 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public String updateUser(User user) {
-		userRepository.insert(user);
-		return "Update user with name: " + user.getName();
+		Optional<User> optionalUser = userRepository.findById(user.getName());
+		if (!optionalUser.isPresent()) {
+			return "User does not exist";
+		}
+		userRepository.save(user);
+		return "Updated user with name: " + user.getName();
 	}
 
 	@Override
@@ -59,7 +63,7 @@ public class UserServiceImpl implements UserService {
 	public String enrollAdminUser(String name) {
 		try {
 			Optional<User> adminUser = userRepository.findById(name);
-			if (adminUser == null) {
+			if (!adminUser.isPresent()) {
 				return "User \"" + name + "\" does not exist in database";
 			}
 			User admin = adminUser.get();
@@ -93,12 +97,12 @@ public class UserServiceImpl implements UserService {
 				return "\"" + adminName + "\" needs to be enrolled and added to the wallet first";
 			}
 			Optional<User> adminUser = userRepository.findById(adminName);
-			if (adminUser == null) {
+			if (!adminUser.isPresent()) {
 				return "User \"" + adminName + "\" does not exist in database";
 			}
 			User admin = adminUser.get();
 			Optional<User> newUserOptional = userRepository.findById(userName);
-			if (newUserOptional == null) {
+			if (!newUserOptional.isPresent()) {
 				return "User \"" + userName + "\" does not exist in database";
 			}
 			User newUser = newUserOptional.get();
