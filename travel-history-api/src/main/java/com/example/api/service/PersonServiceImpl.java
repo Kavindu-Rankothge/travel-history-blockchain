@@ -24,6 +24,9 @@ public class PersonServiceImpl implements PersonService {
 	@Value("${network.yml.path}")
 	private String networkPath;
 
+	@Value("${app.user.identity}")
+	private String userName;
+
 	public Contract getContract() {
 		try {
 			// Load a file system based wallet for managing identities.
@@ -32,7 +35,7 @@ public class PersonServiceImpl implements PersonService {
 			// load a CCP
 			Path networkConfigPath = Paths.get(networkPath);
 			Gateway.Builder builder = Gateway.createBuilder();
-			builder.identity(wallet, "appUser").networkConfig(networkConfigPath).discovery(true);		
+			builder.identity(wallet, userName).networkConfig(networkConfigPath).discovery(true);
 			// create a gateway connection
 			Gateway gateway = builder.connect();
 			// get the network and contract
@@ -51,6 +54,10 @@ public class PersonServiceImpl implements PersonService {
 		try {
 			Contract contract = getContract();
 			person.setId();
+			Optional<Person> optionalPerson = this.getPerson(person.getId());
+			if (optionalPerson.isPresent()) {
+				return "Person already exist";
+			}
 			String personString = gson.toJson(person);
 			contract.submitTransaction("savePerson", person.getId(), personString);
 			return "Added person with id: " + person.getId();
@@ -70,7 +77,7 @@ public class PersonServiceImpl implements PersonService {
 			String jsonString = new String(result);
 			person = gson.fromJson(jsonString, Person.class);
 		} catch (Exception e) {
-			System.out.println("Error while getting person: " + e);
+			return Optional.empty();
 		}
 		return Optional.of(person);
 	}
@@ -90,6 +97,24 @@ public class PersonServiceImpl implements PersonService {
 			System.out.println("Error while getting all people: " + e);
 		}
 		return personList;
+	}
+
+	@Override
+	public String updatePerson(Person person) {
+		Gson gson = new Gson();
+		try {
+			Contract contract = getContract();
+			person.setId();
+			Optional<Person> optionalPerson = this.getPerson(person.getId());
+			if (!optionalPerson.isPresent()) {
+				return "Person does not exist";
+			}
+			String personString = gson.toJson(person);
+			contract.submitTransaction("updatePerson", person.getId(), personString);
+			return "Updated person with id: " + person.getId();
+		} catch(Exception e) {
+			return "Error while updating person: " + e;
+		}
 	}
 
 	@Override

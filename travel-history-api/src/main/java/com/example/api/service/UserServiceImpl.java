@@ -29,6 +29,10 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public String saveUser(User user) {
+		Optional<User> optionalUser = userRepository.findById(user.getName());
+		if (optionalUser.isPresent()) {
+			return "User already exist";
+		}
 		userRepository.save(user);
 		return "Added user with name: " + user.getName();
 	}
@@ -76,7 +80,7 @@ public class UserServiceImpl implements UserService {
 			enrollmentRequestTLS.addHost("localhost");
 			enrollmentRequestTLS.setProfile("tls");
 			Enrollment enrollment = caClient.enroll(name, admin.getPassword(), enrollmentRequestTLS);
-			Identity user = Identities.newX509Identity("Org1MSP", enrollment);
+			Identity user = Identities.newX509Identity(admin.getMspId(), enrollment);
 			wallet.put(name, user);
 			return "Successfully enrolled user \"" + name + "\" and imported it into the wallet";
 		} catch (Exception e) {
