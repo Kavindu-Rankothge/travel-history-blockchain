@@ -1,11 +1,9 @@
 package com.example.api.service;
 
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,50 +47,45 @@ public class PersonServiceImpl implements PersonService {
 
 	@Override
 	public String savePerson(Person person) {
+		Gson gson = new Gson();
 		try {
 			Contract contract = getContract();
-			byte[] result;
-			Gson gson = new Gson();
+			person.setId();
 			String personString = gson.toJson(person);
-//			System.out.println("personString: "+ personString);
-			System.out.println("submitting person: ");
-			result = contract.submitTransaction("savePerson", person.getId(), personString);
-			System.out.println(new String(result));
+			contract.submitTransaction("savePerson", person.getId(), personString);
 			return "Added person with id: " + person.getId();
 		} catch(Exception e) {
-			System.out.println("Error while saving person: " + e);
 			return "Error while saving person: " + e;
 		}
 	}
 
 	@Override
 	public Optional<Person> getPerson(String id) {
-		Person person = null;
-		Contract contract = getContract();
 		byte[] result;
+		Person person = null;
+		Gson gson = new Gson();
+		Contract contract = getContract();
 		try {
 			result = contract.evaluateTransaction("queryPerson", id);
-			System.out.println(new String(result));
-			ByteArrayInputStream bis = new ByteArrayInputStream(result);
-		    ObjectInput in = new ObjectInputStream(bis);
-		    person = (Person) in.readObject();
+			String jsonString = new String(result);
+			person = gson.fromJson(jsonString, Person.class);
 		} catch (Exception e) {
 			System.out.println("Error while getting person: " + e);
 		}
 		return Optional.of(person);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Person> getAllPeople() {
+		Gson gson = new Gson();
 		List<Person> personList = null;
 		Contract contract = getContract();
 		byte[] result;
 		try {
 			result = contract.evaluateTransaction("queryAllPeople");
-			System.out.println(new String(result));
-			ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(result));
-			personList = (ArrayList<Person>) ois.readObject();
+			String jsonString = new String(result);
+			Person[] person = gson.fromJson(jsonString, Person[].class);
+			personList = new ArrayList<Person>(Arrays.asList(person));
 		} catch (Exception e) {
 			System.out.println("Error while getting all people: " + e);
 		}
